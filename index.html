@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .note {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .note-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header-component></header-component>
+    <form-component></form-component>
+    <div id="noteLi">sssss</div>
+    <div id="errorMessages"></div>
+</div>
+
+<script>
+    fetch('https://notes-api.dicoding.dev/v2/notes', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const noteListContainer = document.getElementById('noteLi');
+            data.data.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note'); // Menambahkan kelas "note"
+
+                // Membuat elemen judul
+                const titleElement = document.createElement('h2');
+                titleElement.classList.add('note-title'); // Menambahkan kelas "note-title"
+                titleElement.textContent = note.title;
+
+                // Membuat elemen isi catatan
+                const bodyElement = document.createElement('p');
+                bodyElement.textContent = note.body;
+
+                // Menambahkan elemen judul dan isi catatan ke dalam elemen catatan
+                noteElement.appendChild(titleElement);
+                noteElement.appendChild(bodyElement);
+
+                // Menambahkan elemen catatan ke dalam kontainer catatan
+                noteListContainer.appendChild(noteElement);
+            });
+        })
+
+        .catch(error => {
+            console.error('Error retrieving notes:', error);
+        });
+</script>
+</body>
+</html>
